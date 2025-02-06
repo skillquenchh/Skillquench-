@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form with Floating Placeholder and Light Button</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+  <style>
+    /* General styles */
+    html {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      height: 100%;
+    }
+    /* Login box styling */
+    .login-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px; /* Reduced width */
+      padding: 20px; /* Reduced padding */
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+      box-sizing: border-box;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6); /* Adjusted shadow */
+      border-radius: 8px; /* Slightly smaller radius */
+      z-index: 10; /* Ensure the login form is above the canvas */
+    }
+    .login-box h2 {
+      margin: 0 0 20px; /* Reduced margin */
+      padding: 0;
+      color: #fff;
+      text-align: center;
+      font-size: 20px; /* Reduced font size */
+    }
+    .login-box .user-box {
+      position: relative;
+    }
+    .login-box .user-box input {
+      width: 100%;
+      padding: 8px 0; /* Reduced padding */
+      font-size: 14px; /* Reduced font size */
+      color: #fff;
+      margin-bottom: 20px; /* Reduced margin */
+      border: none;
+      border-bottom: 1px solid #fff;
+      outline: none;
+      background: transparent;
+    }
+    .login-box .user-box label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 8px 0; /* Reduced padding */
+      font-size: 14px; /* Reduced font size */
+      color: #fff;
+      pointer-events: none;
+      transition: 0.5s;
+    }
+    .login-box .user-box input:focus ~ label,
+    .login-box .user-box input:valid ~ label {
+      top: -15px; /* Adjusted for smaller font size */
+      left: 0;
+      color: #03e9f4;
+      font-size: 12px;
+    }
+    .login-box form a.submit-btn {
+      position: relative;
+      display: inline-block;
+      padding: 8px 16px; /* Reduced padding */
+      color: #03e9f4;
+      font-size: 14px; /* Reduced font size */
+      text-decoration: none;
+      text-transform: uppercase;
+      overflow: hidden;
+      transition: 0.5s;
+      margin-top: 20px; /* Reduced margin */
+      letter-spacing: 2px; /* Reduced spacing */
+      border-radius: 5px; /* Added border radius */
+      background-color: #03e9f4;
+      color: #fff;
+      cursor: pointer;
+    }
+    .login-box form a.submit-btn:hover {
+      background-color: #02bcd4;
+    }
+    /* Forgot Password and Create Account Links */
+    .login-box .forgot-password {
+      display: block;
+      margin-top: 10px;
+      text-align: right;
+      font-size: 12px;
+      color: #03e9f4;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .login-box .create-account {
+      display: block;
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      color: #fff;
+      text-decoration: none;
+      background-color: #03e9f4;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .login-box .create-account:hover {
+      background-color: #02bcd4;
+    }
+    /* Canvas styling */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; /* Ensure the canvas stays in the background */
+    }
+  </style>
+</head>
+<body>
+  <!-- Login form -->
+  <div class="login-box">
+    <h2>Login</h2>
+    <form>
+      <div class="user-box">
+        <input type="text" name="" required="">
+        <label>Username</label>
+      </div>
+      <div class="user-box">
+        <input type="password" name="" required="">
+        <label>Password</label>
+      </div>
+      <a href="#" class="submit-btn">Submit</a>
+      <a href="#" class="forgot-password">Forgot Password?</a>
+    </form>
+    <a href="#" class="create-account">Create Account</a>
+  </div>
+  <!-- p5.js script for textile animation -->
+  <script>
+    // Recurse - hour of code with Danny Keig and Kevin Boyer - textiles
+    let warp;
+    let weft;
+    let nThreads;
+    function setup() {
+      createCanvas(windowWidth, windowHeight, WEBGL);
+      background(20);
+      nThreads = 55;
+    }
+    function draw() {
+      t = frameCount / 1000;
+      normalMaterial();
+      // Warp threads
+      fill(100, 150, 250);
+      for (let i = 0; i < nThreads; i++) {
+        x = -width / 2 + ((i + 0.5) * width) / nThreads;
+        y = -height / 2 + height * sin((t * i) / 50);
+        fill(
+          100 + 150 * noise(50 + x / 80 + y / 20),
+          100 + 150 * noise(50 + x / 30 - y / 90),
+          100 + 150 * noise(100 + x / 200 - y / 30)
+        );
+        push();
+        translate(x, y, 0);
+        sphere(width / 300, 24, 24);
+        pop();
+      }
+      // Weft threads
+      for (let i = 0; i < nThreads; i++) {
+        x = -width / 2 + width * sin((t * i) / 100);
+        y = -height / 2 + ((i + 0.5) * height) / nThreads;
+        z = 10 * sin(x * (nThreads / 100));
+        fill(
+          100 + 150 * noise(50 + y / 100 + x / 50),
+          100 + 150 * noise(50 + y / 50 - x / 40),
+          100 + 150 * noise(100 + y / 200)
+        );
+        push();
+        translate(x, y, z);
+        sphere(width / 300, 24, 24);
+        pop();
+      }
+    }
+    // Resize canvas when the window is resized
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+    }
+  </script>
+</body>
+</html>
